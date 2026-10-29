@@ -35,6 +35,10 @@
             btnRename = new Button();
             btnDelete = new Button();
             dtpDueDate = new DateTimePicker();
+            btnFilterAll = new Button();
+            btnFilterActive = new Button();
+            btnFilterDone = new Button();
+            cmbSort = new ComboBox();
             SuspendLayout();
             // 
             // txtTitle
@@ -105,12 +109,63 @@
             dtpDueDate.Size = new Size(200, 23);
             dtpDueDate.TabIndex = 7;
             // 
+            // btnFilterAll
+            // 
+            btnFilterAll.BackColor = SystemColors.ActiveCaption;
+            btnFilterAll.FlatStyle = FlatStyle.Flat;
+            btnFilterAll.Location = new Point(12, 52);
+            btnFilterAll.Name = "btnFilterAll";
+            btnFilterAll.Size = new Size(106, 23);
+            btnFilterAll.TabIndex = 8;
+            btnFilterAll.Text = "Все";
+            btnFilterAll.UseVisualStyleBackColor = false;
+            btnFilterAll.Click += btnFilterAll_Click;
+            // 
+            // btnFilterActive
+            // 
+            btnFilterActive.BackColor = SystemColors.Info;
+            btnFilterActive.FlatStyle = FlatStyle.Flat;
+            btnFilterActive.Location = new Point(144, 52);
+            btnFilterActive.Name = "btnFilterActive";
+            btnFilterActive.Size = new Size(117, 23);
+            btnFilterActive.TabIndex = 9;
+            btnFilterActive.Text = "Активные";
+            btnFilterActive.UseVisualStyleBackColor = false;
+            btnFilterActive.Click += btnFilterActive_Click;
+            // 
+            // btnFilterDone
+            // 
+            btnFilterDone.BackColor = SystemColors.ButtonHighlight;
+            btnFilterDone.FlatStyle = FlatStyle.Flat;
+            btnFilterDone.Location = new Point(291, 52);
+            btnFilterDone.Name = "btnFilterDone";
+            btnFilterDone.Size = new Size(116, 23);
+            btnFilterDone.TabIndex = 10;
+            btnFilterDone.Text = "Выполненные ";
+            btnFilterDone.UseVisualStyleBackColor = false;
+            btnFilterDone.Click += btnFilterDone_Click;
+            // 
+            // cmbSort
+            // 
+            cmbSort.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbSort.FormattingEnabled = true;
+            cmbSort.Items.AddRange(new object[] { "Сначала ранние", "Сначала поздние" });
+            cmbSort.Location = new Point(640, 52);
+            cmbSort.Name = "cmbSort";
+            cmbSort.Size = new Size(121, 23);
+            cmbSort.TabIndex = 11;
+            cmbSort.SelectedIndexChanged += cmbSort_SelectedIndexChanged;
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.ControlLight;
             ClientSize = new Size(800, 450);
+            Controls.Add(cmbSort);
+            Controls.Add(btnFilterDone);
+            Controls.Add(btnFilterActive);
+            Controls.Add(btnFilterAll);
             Controls.Add(dtpDueDate);
             Controls.Add(btnDelete);
             Controls.Add(btnRename);
@@ -134,5 +189,10 @@
         private Button btnRename;
         private Button btnDelete;
         private DateTimePicker dtpDueDate;
+        private Button btnFilterAll;
+        private Button btnFilterActive;
+        private Button btnFilterDone;
+        private Label label1;
+        private ComboBox cmbSort;
     }
 }

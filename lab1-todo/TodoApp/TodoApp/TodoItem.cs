@@ -14,7 +14,6 @@ namespace TodoApp
             _dueDate = dueDate;
             _done = false;
         }
-
         public string Title => _title;
         public bool IsDone => _done;
         

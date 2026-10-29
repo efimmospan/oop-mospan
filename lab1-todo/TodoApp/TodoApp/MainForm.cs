@@ -7,7 +7,8 @@ namespace TodoApp
     {
         private TodoList _list = new TodoList();
         private string _filePath = "tasks.json";
-
+        private string _currentFilter = "Все";
+        private string _currentSort = "Сначала ранние";
         public MainForm()
         {
             InitializeComponent();
@@ -18,11 +19,20 @@ namespace TodoApp
         private void RefreshList()
         {
             lstTasks.Items.Clear();
-            foreach (var item in _list.Items)
-            {
-                string status = item.IsDone ? "☑" : "☐"; ;
-                lstTasks.Items.Add($"{status} {item.Title} (Срок: {item.DueDate.ToShortDateString()})");
 
+            var displayItems = _list.GetFilteredAndSorted(_currentFilter, _currentSort);
+            foreach (var item in displayItems)
+            {
+                string status = item.IsDone ? "☑" : "☐";
+                lstTasks.Items.Add($"{status} {item.Title} (Срок: {item.DueDate.ToShortDateString()})");
+            }
+        }
+        private void cmbSort_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (cmbSort.SelectedItem != null)
+            {
+                _currentSort = cmbSort.SelectedItem.ToString();
+                RefreshList();
             }
         }
 
@@ -95,6 +105,21 @@ namespace TodoApp
         private void numPriority_ValueChanged(object sender, EventArgs e)
         {
 
+        }
+        private void btnFilterAll_Click(object sender, EventArgs e)
+        {
+            _currentFilter = "Все";
+            RefreshList();
+        }
+        private void btnFilterActive_Click(object sender, EventArgs e)
+        {
+            _currentFilter = "Активные";
+            RefreshList();
+        }
+        private void btnFilterDone_Click(object sender, EventArgs e)
+        {
+            _currentFilter = "Выполненные";
+            RefreshList();
         }
     }
 }
