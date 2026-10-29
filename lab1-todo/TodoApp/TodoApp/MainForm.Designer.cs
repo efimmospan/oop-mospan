@@ -48,6 +48,7 @@
             // 
             // lstTasks
             // 
+            lstTasks.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 204);
             lstTasks.FormattingEnabled = true;
             lstTasks.Location = new Point(12, 81);
             lstTasks.Name = "lstTasks";
@@ -56,12 +57,15 @@
             // 
             // btnAdd
             // 
+            btnAdd.BackColor = SystemColors.HotTrack;
+            btnAdd.FlatStyle = FlatStyle.Flat;
+            btnAdd.ForeColor = SystemColors.ActiveCaptionText;
             btnAdd.Location = new Point(439, 12);
             btnAdd.Name = "btnAdd";
             btnAdd.Size = new Size(123, 23);
             btnAdd.TabIndex = 3;
             btnAdd.Text = "Добавить";
-            btnAdd.UseVisualStyleBackColor = true;
+            btnAdd.UseVisualStyleBackColor = false;
             btnAdd.Click += btnAdd_Click;
             // 
             // btnComplete
@@ -105,6 +109,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
+            BackColor = SystemColors.ControlLight;
             ClientSize = new Size(800, 450);
             Controls.Add(dtpDueDate);
             Controls.Add(btnDelete);

@@ -20,7 +20,7 @@ namespace TodoApp
             lstTasks.Items.Clear();
             foreach (var item in _list.Items)
             {
-                string status = item.IsDone ? "[Выполнено]" : "[Активно]";
+                string status = item.IsDone ? "☑" : "☐"; ;
                 lstTasks.Items.Add($"{status} {item.Title} (Срок: {item.DueDate.ToShortDateString()})");
 
             }
