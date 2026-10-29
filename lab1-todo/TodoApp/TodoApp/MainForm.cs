@@ -9,6 +9,7 @@ namespace TodoApp
         private string _filePath = "tasks.json";
         private string _currentFilter = "Все";
         private string _currentSort = "Сначала ранние";
+
         public MainForm()
         {
             InitializeComponent();
@@ -19,14 +20,15 @@ namespace TodoApp
         private void RefreshList()
         {
             lstTasks.Items.Clear();
-
             var displayItems = _list.GetFilteredAndSorted(_currentFilter, _currentSort);
+
             foreach (var item in displayItems)
             {
                 string status = item.IsDone ? "☑" : "☐";
                 lstTasks.Items.Add($"{status} {item.Title} (Срок: {item.DueDate.ToShortDateString()})");
             }
         }
+
         private void cmbSort_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (cmbSort.SelectedItem != null)
@@ -53,7 +55,10 @@ namespace TodoApp
             {
                 int i = lstTasks.SelectedIndex;
                 if (i == -1) throw new ArgumentException("Выберите задачу!");
-                _list.Complete(_list.Items[i]);
+
+                // ИСПРАВЛЕНО: берем отфильтрованный список
+                var items = _list.GetFilteredAndSorted(_currentFilter, _currentSort);
+                _list.Complete(items[i]);
                 RefreshList();
             }
             catch (ArgumentException ex) { MessageBox.Show(ex.Message, "Ошибка"); }
@@ -66,18 +71,15 @@ namespace TodoApp
                 int i = lstTasks.SelectedIndex;
                 if (i == -1) throw new ArgumentException("Выберите задачу!");
 
-                string newTitle = Microsoft.VisualBasic.Interaction.InputBox("Новое название:", "Переименовать", _list.Items[i].Title);
+                // ИСПРАВЛЕНО: берем отфильтрованный список
+                var items = _list.GetFilteredAndSorted(_currentFilter, _currentSort);
+                string newTitle = Microsoft.VisualBasic.Interaction.InputBox("Новое название:", "Переименовать", items[i].Title);
                 if (string.IsNullOrWhiteSpace(newTitle)) return;
 
-                _list.Rename(_list.Items[i], newTitle);
+                _list.Rename(items[i], newTitle);
                 RefreshList();
             }
             catch (ArgumentException ex) { MessageBox.Show(ex.Message, "Ошибка"); }
-
-        }
-        private void MainForm_Load(object sender, EventArgs e)
-        {
-
         }
 
         private void btnDelete_Click(object sender, EventArgs e)
@@ -86,40 +88,36 @@ namespace TodoApp
             {
                 int i = lstTasks.SelectedIndex;
                 if (i == -1) throw new ArgumentException("Выберите задачу!");
-                _list.Remove(_list.Items[i]);
+
+                // ИСПРАВЛЕНО: берем отфильтрованный список
+                var items = _list.GetFilteredAndSorted(_currentFilter, _currentSort);
+                _list.Remove(items[i]);
                 RefreshList();
             }
             catch (ArgumentException ex) { MessageBox.Show(ex.Message, "Ошибка"); }
         }
 
-        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            _list.SaveToFile(_filePath);
-        }
-
-        private void txtTitle_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void numPriority_ValueChanged(object sender, EventArgs e)
-        {
-
-        }
         private void btnFilterAll_Click(object sender, EventArgs e)
         {
             _currentFilter = "Все";
             RefreshList();
         }
+
         private void btnFilterActive_Click(object sender, EventArgs e)
         {
             _currentFilter = "Активные";
             RefreshList();
         }
+
         private void btnFilterDone_Click(object sender, EventArgs e)
         {
             _currentFilter = "Выполненные";
             RefreshList();
+        }
+
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            _list.SaveToFile(_filePath);
         }
     }
 }

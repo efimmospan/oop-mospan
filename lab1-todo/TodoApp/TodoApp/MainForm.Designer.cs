@@ -48,7 +48,7 @@
             txtTitle.Size = new Size(395, 23);
             txtTitle.TabIndex = 0;
             txtTitle.Text = "Название задачи";
-            txtTitle.TextChanged += txtTitle_TextChanged;
+           
             // 
             // lstTasks
             // 
