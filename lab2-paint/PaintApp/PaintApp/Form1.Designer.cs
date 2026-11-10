@@ -24,6 +24,10 @@
             btnRect = new Button();
             cmbColor = new ComboBox();
             numWidth = new NumericUpDown();
+            btnUndo = new Button();
+            btnClear = new Button();
+            btnSave = new Button();
+            btnLoad = new Button();
             ((System.ComponentModel.ISupportInitialize)canvas).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numWidth).BeginInit();
             SuspendLayout();
@@ -99,11 +103,55 @@
             numWidth.TabIndex = 6;
             numWidth.Value = new decimal(new int[] { 1, 0, 0, 0 });
             // 
+            // btnUndo
+            // 
+            btnUndo.Location = new Point(8, 41);
+            btnUndo.Name = "btnUndo";
+            btnUndo.Size = new Size(75, 23);
+            btnUndo.TabIndex = 7;
+            btnUndo.Text = "отменить";
+            btnUndo.UseVisualStyleBackColor = true;
+            btnUndo.Click += btnUndo_Click;
+            // 
+            // btnClear
+            // 
+            btnClear.Location = new Point(113, 41);
+            btnClear.Name = "btnClear";
+            btnClear.Size = new Size(89, 23);
+            btnClear.TabIndex = 8;
+            btnClear.Text = "очистить";
+            btnClear.UseVisualStyleBackColor = true;
+            btnClear.Click += btnClear_Click;
+            // 
+            // btnSave
+            // 
+            btnSave.Location = new Point(553, 41);
+            btnSave.Name = "btnSave";
+            btnSave.Size = new Size(89, 23);
+            btnSave.TabIndex = 9;
+            btnSave.Text = "сохранить";
+            btnSave.UseVisualStyleBackColor = true;
+            btnSave.Click += btnSave_Click; // <-- ДОБАВЛЕНО!
+            // 
+            // btnLoad
+            // 
+            btnLoad.Location = new Point(677, 41);
+            btnLoad.Name = "btnLoad";
+            btnLoad.Size = new Size(89, 23);
+            btnLoad.TabIndex = 10;
+            btnLoad.Text = "открыть";
+            btnLoad.UseVisualStyleBackColor = true;
+            btnLoad.Click += btnLoad_Click; // <-- ДОБАВЛЕНО!
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(btnLoad);
+            Controls.Add(btnSave);
+            Controls.Add(btnClear);
+            Controls.Add(btnUndo);
             Controls.Add(numWidth);
             Controls.Add(cmbColor);
             Controls.Add(btnLine);
@@ -127,5 +175,9 @@
         private Button btnRect;
         private ComboBox cmbColor;
         private NumericUpDown numWidth;
+        private Button btnUndo;
+        private Button btnClear;
+        private Button btnSave;
+        private Button btnLoad;
     }
 }
