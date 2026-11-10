@@ -9,33 +9,42 @@ namespace PaintApp
         private Drawing _drawing = new Drawing();
         private Shape _currentShape = null;
         private string _currentTool = "RectShape";
-        private string _filePath = "picture.json"; // Файл для сохранения
+        private string _filePath = "picture.json";
+
+        private Shape _selectedShape = null; 
+        private Point _lastMousePos;       
 
         public Form1()
         {
+            this.KeyPreview = true; 
             InitializeComponent();
-            // Настраиваем выпадающий список цветов
             cmbColor.Items.AddRange(new object[] { "Black", "Red", "Blue", "Green", "Orange" });
             cmbColor.SelectedIndex = 0;
+            this.KeyDown += new KeyEventHandler(Form1_KeyDown);
         }
-
-        // --- РИСОВАНИЕ МЫШЬЮ ---
 
         private void canvas_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
             {
+                _lastMousePos = e.Location;
+
+                // 1. Пытаемся найти фигуру под курсором
+                _selectedShape = _drawing.GetShapeAt(e.Location);
+                if (_selectedShape != null)
+                {
+                    _currentShape = null;
+                    canvas.Invalidate();
+                    return;
+                }
+
+                // 2. Если не попали — создаем новую
                 Color selectedColor = Color.FromName(cmbColor.SelectedItem.ToString());
                 int selectedWidth = (int)numWidth.Value;
-
-                if (_currentTool == "RectShape")
-                    _currentShape = new RectShape(e.Location, selectedColor, selectedWidth);
-                else if (_currentTool == "EllipseShape")
-                    _currentShape = new EllipseShape(e.Location, selectedColor, selectedWidth);
-                else if (_currentTool == "PencilShape")
-                    _currentShape = new PencilShape(e.Location, selectedColor, selectedWidth);
-                else if (_currentTool == "LineShape")
-                    _currentShape = new LineShape(e.Location, selectedColor, selectedWidth);
+                if (_currentTool == "RectShape") _currentShape = new RectShape(e.Location, selectedColor, selectedWidth);
+                else if (_currentTool == "EllipseShape") _currentShape = new EllipseShape(e.Location, selectedColor, selectedWidth);
+                else if (_currentTool == "PencilShape") _currentShape = new PencilShape(e.Location, selectedColor, selectedWidth);
+                else if (_currentTool == "LineShape") _currentShape = new LineShape(e.Location, selectedColor, selectedWidth);
 
                 _drawing.Add(_currentShape);
                 canvas.Invalidate();
@@ -44,57 +53,93 @@ namespace PaintApp
 
         private void canvas_MouseMove(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Left && _currentShape != null)
+            if (e.Button == MouseButtons.Left)
             {
-                _currentShape.MoveEnd(e.Location);
-                canvas.Invalidate();
+                if (_selectedShape != null) // Режим перемещения
+                {
+                    int dx = e.X - _lastMousePos.X;
+                    int dy = e.Y - _lastMousePos.Y;
+                    _selectedShape.Move(dx, dy);
+                    _lastMousePos = e.Location;
+                    canvas.Invalidate();
+                }
+                else if (_currentShape != null) // Режим рисования
+                {
+                    _currentShape.MoveEnd(e.Location);
+                    canvas.Invalidate();
+                }
             }
         }
 
         private void canvas_MouseUp(object sender, MouseEventArgs e)
         {
             _currentShape = null;
+            // _selectedShape оставляем, чтобы его можно было удалить
         }
 
         private void canvas_Paint(object sender, PaintEventArgs e)
         {
             _drawing.Draw(e.Graphics);
+
+            // Если фигура выделена — рисуем вокруг неё красную рамку
+            if (_selectedShape != null)
+            {
+                using var pen = new Pen(Color.Red, 2);
+                int x = Math.Min(_selectedShape.Start.X, _selectedShape.End.X) - 5;
+                int y = Math.Min(_selectedShape.Start.Y, _selectedShape.End.Y) - 5;
+                int w = Math.Abs(_selectedShape.End.X - _selectedShape.Start.X) + 10;
+                int h = Math.Abs(_selectedShape.End.Y - _selectedShape.Start.Y) + 10;
+
+                e.Graphics.DrawRectangle(pen, x, y, w, h);
+            }
         }
 
-        // --- ВЫБОР ИНСТРУМЕНТА ---
+        // УДАЛЕНИЕ по клавише Delete
+        private void Form1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Delete && _selectedShape != null)
+            {
+                _drawing.Remove(_selectedShape);
+                _selectedShape = null;
+                canvas.Invalidate();
+            }
+        }
 
+        // --- ОСТАЛЬНЫЕ КНОПКИ ---
         private void btnRect_Click(object sender, EventArgs e) => _currentTool = "RectShape";
         private void btnEllipse_Click(object sender, EventArgs e) => _currentTool = "EllipseShape";
         private void btnPencil_Click(object sender, EventArgs e) => _currentTool = "PencilShape";
         private void btnLine_Click(object sender, EventArgs e) => _currentTool = "LineShape";
 
-        // --- ОТМЕНА И ОЧИСТКА ---
-
         private void btnUndo_Click(object sender, EventArgs e)
         {
             _drawing.RemoveLast();
+            _selectedShape = null;
             canvas.Invalidate();
         }
 
         private void btnClear_Click(object sender, EventArgs e)
         {
             _drawing.Clear();
+            _selectedShape = null;
             canvas.Invalidate();
         }
-
-        // --- СОХРАНЕНИЕ И ЗАГРУЗКА ---
 
         private void btnSave_Click(object sender, EventArgs e)
         {
             _drawing.SaveToFile(_filePath);
-            MessageBox.Show("Рисунок успешно сохранен!", "Сохранение");
+            MessageBox.Show("Рисунок сохранен!");
         }
 
         private void btnLoad_Click(object sender, EventArgs e)
         {
             _drawing.LoadFromFile(_filePath);
-            canvas.Invalidate(); // Перерисовываем холст
-            MessageBox.Show("Рисунок загружен!", "Загрузка");
+            _selectedShape = null;
+            canvas.Invalidate();
+        }
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            
         }
     }
 }

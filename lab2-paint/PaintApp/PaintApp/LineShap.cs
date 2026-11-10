@@ -13,5 +13,12 @@ namespace PaintApp
             using var pen = new Pen(Color, Width);
             g.DrawLine(pen, Start, End);
         }
+        public override bool Contains(Point point)
+        {
+          
+            var rect = Bounds();
+            rect.Inflate(5, 5); 
+            return rect.Contains(point);
+        }
     }
 }

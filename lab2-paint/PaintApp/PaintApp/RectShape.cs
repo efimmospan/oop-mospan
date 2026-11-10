@@ -9,5 +9,6 @@ namespace PaintApp
             using var pen = new Pen(Color, Width);
             g.DrawRectangle(pen, Bounds());
         }
+        public override bool Contains(Point p) => Bounds().Contains(p);
     }
 }

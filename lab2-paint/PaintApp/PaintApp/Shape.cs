@@ -22,7 +22,12 @@ namespace PaintApp
         protected Rectangle Bounds() => new Rectangle(
             Math.Min(Start.X, End.X), Math.Min(Start.Y, End.Y),
             Math.Abs(End.X - Start.X), Math.Abs(End.Y - Start.Y));
-
+        public abstract bool Contains(Point point);
         public abstract void Draw(Graphics g);
+        public virtual void Move(int dx, int dy)
+        {
+            Start = new Point(Start.X + dx, Start.Y + dy);
+            End = new Point(End.X + dx, End.Y + dy);
+        }
     }
 }

@@ -35,7 +35,7 @@
             // canvas
             // 
             canvas.BackColor = SystemColors.Window;
-            canvas.Location = new Point(0, 67);
+            canvas.Location = new Point(-3, 70);
             canvas.Name = "canvas";
             canvas.Size = new Size(801, 383);
             canvas.TabIndex = 0;
@@ -131,7 +131,7 @@
             btnSave.TabIndex = 9;
             btnSave.Text = "сохранить";
             btnSave.UseVisualStyleBackColor = true;
-            btnSave.Click += btnSave_Click; // <-- ДОБАВЛЕНО!
+            btnSave.Click += btnSave_Click;
             // 
             // btnLoad
             // 
@@ -141,7 +141,7 @@
             btnLoad.TabIndex = 10;
             btnLoad.Text = "открыть";
             btnLoad.UseVisualStyleBackColor = true;
-            btnLoad.Click += btnLoad_Click; // <-- ДОБАВЛЕНО!
+            btnLoad.Click += btnLoad_Click;
             // 
             // Form1
             // 
@@ -161,6 +161,8 @@
             Controls.Add(canvas);
             Name = "Form1";
             Text = "Paint";
+            
+            KeyDown += Form1_KeyDown;
             ((System.ComponentModel.ISupportInitialize)canvas).EndInit();
             ((System.ComponentModel.ISupportInitialize)numWidth).EndInit();
             ResumeLayout(false);

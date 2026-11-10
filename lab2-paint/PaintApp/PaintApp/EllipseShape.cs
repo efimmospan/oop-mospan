@@ -11,5 +11,10 @@ namespace PaintApp
             using var pen = new Pen(Color, Width);
             g.DrawEllipse(pen, Bounds());
         }
+        public override bool Contains(Point point)
+        {
+            var rect = Bounds();
+            return rect.Contains(point);
+        }
     }
 }

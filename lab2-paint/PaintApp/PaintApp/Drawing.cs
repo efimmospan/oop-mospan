@@ -3,52 +3,79 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Text.Json;
+
 namespace PaintApp
 {
     public class Drawing
     {
         private List<Shape> _shapes = new List<Shape>();
-        public void Add(Shape shape)
-        {
-            _shapes.Add(shape);
-        }
+
+        public void Add(Shape shape) => _shapes.Add(shape);
+
         public void RemoveLast()
         {
-            if (_shapes.Count > 0)
-                _shapes.RemoveAt(_shapes.Count - 1);
+            if (_shapes.Count > 0) _shapes.RemoveAt(_shapes.Count - 1);
         }
-        public void Clear()
+
+        public void Clear() => _shapes.Clear();
+
+        // Удаление конкретной фигуры
+        public void Remove(Shape shape)
         {
-            _shapes.Clear();
+            if (shape != null) _shapes.Remove(shape);
         }
+
+        // Поиск фигуры под курсором
+        public Shape GetShapeAt(Point p)
+        {
+            for (int i = _shapes.Count - 1; i >= 0; i--)
+            {
+                if (_shapes[i].Contains(p)) return _shapes[i];
+            }
+            return null;
+        }
+
+        // Возвращает копию списка (нужно для команды Очистки)
+        public List<Shape> GetAllShapes() => new List<Shape>(_shapes);
+
         public void Draw(Graphics g)
         {
-            foreach (var shape in _shapes)
-            {
-                shape.Draw(g);
-            }
+            foreach (var shape in _shapes) shape.Draw(g);
         }
+
+        // --- СОХРАНЕНИЕ И ЗАГРУЗКА ---
+
         public void SaveToFile(string filePath)
         {
             var dataToSave = new List<ShapeData>();
             foreach (var shape in _shapes)
             {
-                dataToSave.Add(new ShapeData
+                var data = new ShapeData
                 {
                     Kind = shape.GetType().Name,
                     Start = shape.Start,
                     End = shape.End,
                     Color = shape.Color.ToArgb(),
                     Width = shape.Width
-                });
+                };
+
+                // Если это карандаш, сохраняем все его точки
+                if (shape is PencilShape pencil)
+                {
+                    data.Points = pencil.Points;
+                }
+
+                dataToSave.Add(data);
             }
 
             string json = JsonSerializer.Serialize(dataToSave, new JsonSerializerOptions { WriteIndented = true });
             File.WriteAllText(filePath, json);
         }
+
         public void LoadFromFile(string filePath)
         {
             if (!File.Exists(filePath)) return;
+
             string json = File.ReadAllText(filePath);
             var loadedData = JsonSerializer.Deserialize<List<ShapeData>>(json);
 
@@ -60,13 +87,27 @@ namespace PaintApp
                 {
                     Color color = Color.FromArgb(item.Color);
                     Shape newShape = ShapeFactory.Create(item.Kind, item.Start, color, item.Width);
-                    newShape.MoveEnd(item.End); 
+
+                    // Если это карандаш и у него есть сохраненные точки
+                    if (newShape is PencilShape pencil && item.Points != null)
+                    {
+                        pencil.Points.Clear();
+                        pencil.Points.AddRange(item.Points);
+                        if (pencil.Points.Count > 0)
+                            pencil.MoveEnd(pencil.Points[pencil.Points.Count - 1]);
+                    }
+                    else
+                    {
+                        newShape.MoveEnd(item.End);
+                    }
+
                     _shapes.Add(newShape);
                 }
             }
         }
     }
 
+    // Класс для сохранения данных в JSON
     public class ShapeData
     {
         public string Kind { get; set; } = "";
@@ -74,5 +115,8 @@ namespace PaintApp
         public Point End { get; set; }
         public int Color { get; set; }
         public int Width { get; set; }
+
+        // Список точек для карандаша
+        public List<Point>? Points { get; set; }
     }
 }
