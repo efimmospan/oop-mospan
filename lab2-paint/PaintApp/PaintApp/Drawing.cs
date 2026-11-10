@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Text.Json;
-
 namespace PaintApp
 {
     public class Drawing
-    {
+    {   
         private List<Shape> _shapes = new List<Shape>();
 
         public void Add(Shape shape) => _shapes.Add(shape);
@@ -18,14 +17,10 @@ namespace PaintApp
         }
 
         public void Clear() => _shapes.Clear();
-
-        // Удаление конкретной фигуры
         public void Remove(Shape shape)
         {
             if (shape != null) _shapes.Remove(shape);
         }
-
-        // Поиск фигуры под курсором
         public Shape GetShapeAt(Point p)
         {
             for (int i = _shapes.Count - 1; i >= 0; i--)
@@ -34,16 +29,12 @@ namespace PaintApp
             }
             return null;
         }
-
-        // Возвращает копию списка (нужно для команды Очистки)
         public List<Shape> GetAllShapes() => new List<Shape>(_shapes);
 
         public void Draw(Graphics g)
         {
             foreach (var shape in _shapes) shape.Draw(g);
         }
-
-        // --- СОХРАНЕНИЕ И ЗАГРУЗКА ---
 
         public void SaveToFile(string filePath)
         {
@@ -58,8 +49,6 @@ namespace PaintApp
                     Color = shape.Color.ToArgb(),
                     Width = shape.Width
                 };
-
-                // Если это карандаш, сохраняем все его точки
                 if (shape is PencilShape pencil)
                 {
                     data.Points = pencil.Points;
@@ -87,8 +76,6 @@ namespace PaintApp
                 {
                     Color color = Color.FromArgb(item.Color);
                     Shape newShape = ShapeFactory.Create(item.Kind, item.Start, color, item.Width);
-
-                    // Если это карандаш и у него есть сохраненные точки
                     if (newShape is PencilShape pencil && item.Points != null)
                     {
                         pencil.Points.Clear();
@@ -107,7 +94,6 @@ namespace PaintApp
         }
     }
 
-    // Класс для сохранения данных в JSON
     public class ShapeData
     {
         public string Kind { get; set; } = "";
@@ -116,7 +102,7 @@ namespace PaintApp
         public int Color { get; set; }
         public int Width { get; set; }
 
-        // Список точек для карандаша
+   
         public List<Point>? Points { get; set; }
     }
 }

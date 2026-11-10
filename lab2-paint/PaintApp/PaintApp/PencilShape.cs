@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
-
 namespace PaintApp
 {
     public class PencilShape : Shape

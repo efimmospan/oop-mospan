@@ -28,6 +28,7 @@
             btnClear = new Button();
             btnSave = new Button();
             btnLoad = new Button();
+            btnExport = new Button();
             ((System.ComponentModel.ISupportInitialize)canvas).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numWidth).BeginInit();
             SuspendLayout();
@@ -37,7 +38,7 @@
             canvas.BackColor = SystemColors.Window;
             canvas.Location = new Point(-3, 70);
             canvas.Name = "canvas";
-            canvas.Size = new Size(801, 383);
+            canvas.Size = new Size(801, 348);
             canvas.TabIndex = 0;
             canvas.TabStop = false;
             canvas.Paint += canvas_Paint;
@@ -92,6 +93,7 @@
             cmbColor.Name = "cmbColor";
             cmbColor.Size = new Size(121, 23);
             cmbColor.TabIndex = 5;
+            cmbColor.Text = "цвет";
             // 
             // numWidth
             // 
@@ -143,11 +145,22 @@
             btnLoad.UseVisualStyleBackColor = true;
             btnLoad.Click += btnLoad_Click;
             // 
+            // btnExport
+            // 
+            btnExport.Location = new Point(8, 424);
+            btnExport.Name = "btnExport";
+            btnExport.Size = new Size(152, 27);
+            btnExport.TabIndex = 11;
+            btnExport.Text = "экспорт в PNG";
+            btnExport.UseVisualStyleBackColor = true;
+            btnExport.Click += btnExport_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(btnExport);
             Controls.Add(btnLoad);
             Controls.Add(btnSave);
             Controls.Add(btnClear);
@@ -161,7 +174,6 @@
             Controls.Add(canvas);
             Name = "Form1";
             Text = "Paint";
-            
             KeyDown += Form1_KeyDown;
             ((System.ComponentModel.ISupportInitialize)canvas).EndInit();
             ((System.ComponentModel.ISupportInitialize)numWidth).EndInit();
@@ -181,5 +193,6 @@
         private Button btnClear;
         private Button btnSave;
         private Button btnLoad;
+        private Button btnExport;
     }
 }

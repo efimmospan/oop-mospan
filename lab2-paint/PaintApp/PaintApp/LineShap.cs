@@ -1,5 +1,4 @@
 ﻿using System.Drawing;
-
 namespace PaintApp
 {
     public class LineShape : Shape

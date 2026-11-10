@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Drawing;
-
 namespace PaintApp
 {
     public abstract class Shape
