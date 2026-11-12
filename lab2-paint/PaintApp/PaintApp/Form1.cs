@@ -42,7 +42,7 @@ namespace PaintApp
                 else if (_currentTool == "PencilShape") _currentShape = new PencilShape(e.Location, selectedColor, selectedWidth);
                 else if (_currentTool == "LineShape") _currentShape = new LineShape(e.Location, selectedColor, selectedWidth);
 
-                _history.Do(new AddShapeCommand(_drawing, _currentShape)); // <--- ЧЕРЕЗ ИСТОРИЮ
+                _history.Do(new AddShapeCommand(_drawing, _currentShape));
                 canvas.Invalidate();
             }
         }
